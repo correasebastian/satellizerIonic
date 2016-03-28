@@ -107,3 +107,18 @@ mirar en la discusion estos
         var $state = $injector.get("$state");
         $state.go("tab.dash");
     });
+
+
+
+
+    #hardware back button
+    http://www.gajotres.net/ionic-framework-handling-android-back-button-like-a-pro/
+    http://stackoverflow.com/questions/26548418/disable-hardware-back-button-in-ionic-application
+
+    $ionicPlatform.registerBackButtonAction(function () {
+  if (condition) {
+    navigator.app.exitApp();
+  } else {
+    handle back action!
+  }
+}, 100);

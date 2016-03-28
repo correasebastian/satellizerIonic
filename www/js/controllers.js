@@ -1,4 +1,4 @@
-var au;
+var au, ih;
 angular.module('starter.controllers', [])
 
 
@@ -34,7 +34,18 @@ angular.module('starter.controllers', [])
     };
 })
 
-.controller('DashCtrl', function($scope, Chats, $http, $auth, $state) {
+.controller('DashCtrl', function($scope, Chats, $http, $auth, $state, $ionicHistory) {
+    // si viene de login limpiar esto
+    ih = $ionicHistory;
+    if ($ionicHistory.backView() && $ionicHistory.backView().stateName === 'login') {
+        console.info('coming from login, clean all')
+        $ionicHistory.clearHistory();
+        $ionicHistory.clearCache();
+    }
+
+
+
+
     $scope.test = function() {
         $http.get('/name')
             .then(function(res) {
