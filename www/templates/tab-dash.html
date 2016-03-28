@@ -2,17 +2,23 @@
     <ion-content class="padding">
         <div ng-if="!isAuthenticated()">
             <button ng-click="test()" class="button button-block icon-left ion-social-facebook">
-                test headers
+                succes request call
+            </button>
+            <div ng-show="answer">
+                <h3>headers </h3>
+                <span>{{answer.config.headers | json}}</span>
+                <h3>data </h3>
+                <span>{{answer.data | json}}</span>
+            </div>
+        </div>
+        <div ng-if="!isAuthenticated()">
+            <button ng-click="testUnAuth()" class="button button-block icon-left ion-social-facebook">
+                simulate unauth request (401)
             </button>
         </div>
         <div ng-if="!isAuthenticated()">
             <button ng-click="logout()" class="button button-block icon-left ion-social-facebook">
                 logout
-            </button>
-        </div>
-        <div ng-if="!isAuthenticated()">
-            <button ng-click="testUnAuth()" class="button button-block icon-left ion-social-facebook">
-                test unauth
             </button>
         </div>
     </ion-content>
