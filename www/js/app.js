@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'satellizer', 'starter.controllers', 'starter.services', 'fakeBE'])
 
-.run(function($ionicPlatform, $rootScope, $state) {
+.run(function($ionicPlatform, $rootScope, $state, $ionicPopup,AUTH_EVENTS,$auth) {
         $ionicPlatform.ready(function() {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
@@ -27,6 +27,19 @@ angular.module('starter', ['ionic', 'satellizer', 'starter.controllers', 'starte
             console.error('$stateChangeError', error)
             if (error === 'notAuth')
                 $state.go('login')
+        });
+
+        $rootScope.$on(AUTH_EVENTS.notAuthenticated, function(event) {
+            debugger
+            var alertPopup = $ionicPopup.alert({
+                title: 'Session Expired!',
+                template: 'Sorry, You have to login again.'
+            });
+            $auth.logout().then(function() {
+                $state.go('login')
+            })
+
+
         });
 
 
@@ -78,82 +91,101 @@ angular.module('starter', ['ionic', 'satellizer', 'starter.controllers', 'starte
 
 .config(function($stateProvider, $urlRouterProvider) {
 
-    // Ionic uses AngularUI Router which uses the concept of states
-    // Learn more here: https://github.com/angular-ui/ui-router
-    // Set up the various states which the app can be in.
-    // Each state's controller can be found in controllers.js
-    $stateProvider
+        // Ionic uses AngularUI Router which uses the concept of states
+        // Learn more here: https://github.com/angular-ui/ui-router
+        // Set up the various states which the app can be in.
+        // Each state's controller can be found in controllers.js
+        $stateProvider
 
-    // setup an abstract state for the tabs directive
-        .state('tab', {
-        url: '/tab',
-        abstract: true,
-        templateUrl: 'templates/tabs.html',
-        resolve: {
-            isAuth: ['$auth', '$q', function($auth, $q) {
-                if ($auth.isAuthenticated())
-                    return $q.when();
-                return $q.reject('notAuth')
+        // setup an abstract state for the tabs directive
+            .state('tab', {
+            url: '/tab',
+            abstract: true,
+            templateUrl: 'templates/tabs.html',
+            resolve: {
+                isAuth: ['$auth', '$q', function($auth, $q) {
+                    if ($auth.isAuthenticated())
+                        return $q.when();
+                    return $q.reject('notAuth')
 
 
-            }]
-        }
-    })
-
-    .state('login', {
-        url: '/login',
-        templateUrl: 'templates/login.html',
-        controller: 'LoginCtrl'
-
-    })
-
-    // Each tab has its own nav history stack:
-
-    .state('tab.dash', {
-        url: '/dash',
-        views: {
-            'tab-dash': {
-                templateUrl: 'templates/tab-dash.html',
-                controller: 'DashCtrl'
-            }
-        }
-    })
-
-    .state('tab.chats', {
-            url: '/chats',
-            views: {
-                'tab-chats': {
-                    templateUrl: 'templates/tab-chats.html',
-                    controller: 'ChatsCtrl'
-                }
+                }]
             }
         })
-        .state('tab.chat-detail', {
-            url: '/chats/:chatId',
+
+        .state('login', {
+            url: '/login',
+            templateUrl: 'templates/login.html',
+            controller: 'LoginCtrl'
+
+        })
+
+        // Each tab has its own nav history stack:
+
+        .state('tab.dash', {
+            url: '/dash',
             views: {
-                'tab-chats': {
-                    templateUrl: 'templates/chat-detail.html',
-                    controller: 'ChatDetailCtrl'
+                'tab-dash': {
+                    templateUrl: 'templates/tab-dash.html',
+                    controller: 'DashCtrl'
                 }
             }
         })
 
-    .state('tab.account', {
-        url: '/account',
-        views: {
-            'tab-account': {
-                templateUrl: 'templates/tab-account.html',
-                controller: 'AccountCtrl'
+        .state('tab.chats', {
+                url: '/chats',
+                views: {
+                    'tab-chats': {
+                        templateUrl: 'templates/tab-chats.html',
+                        controller: 'ChatsCtrl'
+                    }
+                }
+            })
+            .state('tab.chat-detail', {
+                url: '/chats/:chatId',
+                views: {
+                    'tab-chats': {
+                        templateUrl: 'templates/chat-detail.html',
+                        controller: 'ChatDetailCtrl'
+                    }
+                }
+            })
+
+        .state('tab.account', {
+            url: '/account',
+            views: {
+                'tab-account': {
+                    templateUrl: 'templates/tab-account.html',
+                    controller: 'AccountCtrl'
+                }
             }
+        });
+
+        // if none of the above states are matched, use this as the fallback
+        // $urlRouterProvider.otherwise('/tab/dash');
+
+        $urlRouterProvider.otherwise(function($injector, $location) {
+            var $state = $injector.get("$state");
+            $state.go("tab.dash");
+        });
+
+    })
+    .constant('AUTH_EVENTS', {
+        notAuthenticated: 'auth-not-authenticated'
+    })
+
+.factory('AuthInterceptor', function($rootScope, $q, AUTH_EVENTS) {
+    return {
+        responseError: function(response) {
+            console.error('AuthInterceptor')
+            $rootScope.$broadcast({
+                401: AUTH_EVENTS.notAuthenticated,
+            }[response.status], response);
+            return $q.reject(response);
         }
-    });
+    };
+})
 
-    // if none of the above states are matched, use this as the fallback
-    // $urlRouterProvider.otherwise('/tab/dash');
-
-    $urlRouterProvider.otherwise(function($injector, $location) {
-        var $state = $injector.get("$state");
-        $state.go("tab.dash");
-    });
-
+.config(function($httpProvider) {
+    $httpProvider.interceptors.push('AuthInterceptor');
 });

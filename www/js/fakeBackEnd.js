@@ -34,5 +34,9 @@
             debugger;
             return headers['Authorization'] == 'xxx';
         }).respond(200, { fullName: 'sebastian correa' });
+
+        $httpBackend.whenGET('/fail', undefined, function(headers) {
+
+        }).respond(401, { error: 'unauth' });
     }
 })();

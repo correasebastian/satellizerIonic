@@ -10,5 +10,10 @@
                 logout
             </button>
         </div>
+        <div ng-if="!isAuthenticated()">
+            <button ng-click="testUnAuth()" class="button button-block icon-left ion-social-facebook">
+                test unauth
+            </button>
+        </div>
     </ion-content>
 </ion-view>

@@ -57,6 +57,17 @@ angular.module('starter.controllers', [])
                 console.error(err)
             })
     }
+    $scope.testUnAuth = function() {
+        $http.get('/fail')
+            .then(function(res) {
+                console.log(res)
+            })
+            .catch(function(err) {
+                console.error(err)
+            })
+    }
+
+
 
     $scope.logout = function() {
         $auth.logout().then(function() {
