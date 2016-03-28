@@ -1,16 +1,21 @@
+var au;
 angular.module('starter.controllers', [])
 
 
-.controller('DashCtrl', function($scope, $ionicPopup, $auth) {
+.controller('LoginCtrl', function($scope, $ionicPopup, $auth, $state) {
+    au = $auth;
 
     $scope.authenticate = function(provider) {
         $auth.authenticate(provider)
             .then(function(res) {
-                console.log(res);
+                console.log('$scope.authenticate', res);
                 $ionicPopup.alert({
-                    title: 'Success',
-                    content: 'You have successfully logged in!'
-                })
+                        title: 'Success',
+                        content: 'You have successfully logged in!'
+                    })
+                    .then(function(res) {
+                        $state.go('tab.dash')
+                    })
             })
             .catch(function(response) {
                 $ionicPopup.alert({
@@ -22,12 +27,28 @@ angular.module('starter.controllers', [])
     };
 
 
-    $scope.logout = function() {
-        $auth.logout();
-    };
+
 
     $scope.isAuthenticated = function() {
         return $auth.isAuthenticated();
+    };
+})
+
+.controller('DashCtrl', function($scope, Chats, $http, $auth, $state) {
+    $scope.test = function() {
+        $http.get('/name')
+            .then(function(res) {
+                console.log(res)
+            })
+            .catch(function(err) {
+                console.error(err)
+            })
+    }
+
+    $scope.logout = function() {
+        $auth.logout().then(function() {
+            $state.go('login')
+        })
     };
 })
 

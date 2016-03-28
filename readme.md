@@ -72,3 +72,38 @@ http://oauthlib.readthedocs.org/en/latest/oauth2/grants/implicit.html
 
 #AUTH0
 https://github.com/auth0/angular-jwt
+
+#resolve auth
+http://stackoverflow.com/questions/29933474/angularjs-using-ui-router-resolve-for-authentication
+
+https://devdactic.com/user-auth-angularjs-ionic/
+
+https://medium.com/@petehouston/protect-authentication-routes-in-angular-ui-router-and-satellizer-7745257a7e6#.urfo7mh96
+
+
+http://stackoverflow.com/questions/28332587/ui-router-and-satellizer-force-login
+
+
+https://devdactic.com/restful-api-user-authentication-2/
+
+
+
+#oauth 2 flows
+http://isciurus.blogspot.com/2012/09/pwning-facebook-authorization-through.html
+
+#testing headers
+http://stackoverflow.com/questions/27014423/testing-angular-project-service-for-specific-headers-in-http-requests-using-ht
+
+http://andrewfong.com/blog/2014/09/22/angularjs-testing-headers-with-whenget-expectget/
+
+
+
+#solve infiinte digest 
+https://disqus.com/home/discussion/devdactic/how_to_handle_user_authentication_with_angularjs_inside_your_ionic_app/
+
+mirar en la discusion estos 
+
+  $urlRouterProvider.otherwise(function($injector, $location) {
+        var $state = $injector.get("$state");
+        $state.go("tab.dash");
+    });

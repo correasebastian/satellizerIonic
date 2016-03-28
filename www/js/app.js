@@ -5,9 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic','satellizer','starter.controllers', 'starter.services', 'fakeBE'])
+angular.module('starter', ['ionic', 'satellizer', 'starter.controllers', 'starter.services', 'fakeBE'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope, $state) {
         $ionicPlatform.ready(function() {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
@@ -20,6 +20,13 @@ angular.module('starter', ['ionic','satellizer','starter.controllers', 'starter.
                 // org.apache.cordova.statusbar required
                 StatusBar.styleDefault();
             }
+        });
+
+        $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
+            debugger;
+            console.error('$stateChangeError', error)
+            if (error === 'notAuth')
+                $state.go('login')
         });
     })
     .config(function($authProvider) {
@@ -64,7 +71,23 @@ angular.module('starter', ['ionic','satellizer','starter.controllers', 'starter.
         .state('tab', {
         url: '/tab',
         abstract: true,
-        templateUrl: 'templates/tabs.html'
+        templateUrl: 'templates/tabs.html',
+        resolve: {
+            isAuth: ['$auth', '$q', function($auth, $q) {
+                if ($auth.isAuthenticated())
+                    return $q.when();
+                return $q.reject('notAuth')
+
+
+            }]
+        }
+    })
+
+    .state('login', {
+        url: '/login',
+        templateUrl: 'templates/login.html',
+        controller: 'LoginCtrl'
+
     })
 
     // Each tab has its own nav history stack:
@@ -109,6 +132,11 @@ angular.module('starter', ['ionic','satellizer','starter.controllers', 'starter.
     });
 
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/tab/dash');
+    // $urlRouterProvider.otherwise('/tab/dash');
+
+    $urlRouterProvider.otherwise(function($injector, $location) {
+        var $state = $injector.get("$state");
+        $state.go("tab.dash");
+    });
 
 });
