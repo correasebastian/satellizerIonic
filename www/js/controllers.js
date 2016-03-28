@@ -2,8 +2,10 @@ var au, ih;
 angular.module('starter.controllers', [])
 
 
-.controller('LoginCtrl', function($scope, $ionicPopup, $auth, $state) {
+.controller('LoginCtrl', function($scope, $ionicPopup, $auth, $state, $ionicHistory) {
     au = $auth;
+    $ionicHistory.clearHistory();
+    $ionicHistory.clearCache();
 
     $scope.authenticate = function(provider) {
         $auth.authenticate(provider)

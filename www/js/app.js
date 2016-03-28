@@ -29,18 +29,22 @@ angular.module('starter', ['ionic', 'satellizer', 'starter.controllers', 'starte
                 $state.go('login')
         });
 
-  /*      $ionicPlatform.registerBackButtonAction(function(event) {
-            if (true) { // your check here
-                $ionicPopup.confirm({
-                    title: 'System warning',
-                    template: 'are you sure you want to exit?'
-                }).then(function(res) {
-                    if (res) {
-                        ionic.Platform.exitApp();
-                    }
-                })
-            }
-        }, 100);*/
+
+        //puedo intentar dos cosas, el login page no es gran cosa, entonces puedo hacer lo siguiente
+        //1 cahe=false en esa vista y siempre limpiar el historial
+        //2 cache true y usar viewlifecycle para limpiar el historial
+        /*       $ionicPlatform.registerBackButtonAction(function(event) {
+                   if (true) { // your check here
+                       $ionicPopup.confirm({
+                           title: 'System warning',
+                           template: 'are you sure you want to exit?'
+                       }).then(function(res) {
+                           if (res) {
+                               ionic.Platform.exitApp();
+                           }
+                       })
+                   }
+               }, 100);*/
     })
     .config(function($authProvider) {
         var commonConfig = {
