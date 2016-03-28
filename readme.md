@@ -83,8 +83,9 @@ https://medium.com/@petehouston/protect-authentication-routes-in-angular-ui-rout
 
 http://stackoverflow.com/questions/28332587/ui-router-and-satellizer-force-login
 
-
+#complete example plus cors proxy Handling CORS issues.
 https://devdactic.com/restful-api-user-authentication-2/
+
 
 
 
